@@ -3,4 +3,8 @@
     <color name="style_color_primary">#FF5722</color>
     <color name="style_color_primary_dark">#E64A19</color>
     <color name="style_color_accent">#8BC34A</color>
+
+    <color name="btn_default_light_normal">#00000000</color>
+    <color name="btn_default_light_pressed">#40ffffff</color>
+    <color name="style_color_text">#fff</color>
 </resources>
