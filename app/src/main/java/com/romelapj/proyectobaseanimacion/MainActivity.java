@@ -1,10 +1,13 @@
 package com.romelapj.proyectobaseanimacion;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.OvershootInterpolator;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -12,19 +15,27 @@ import butterknife.InjectView;
 
 public class MainActivity extends ActionBarActivity {
     private MenuItem inboxMenuItem;
+
+    private static final int ANIM_DURATION_TOOLBAR = 300;
     @InjectView(R.id.tbMain)
     Toolbar toolbar;
+
+    private boolean pendingIntroAnimation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         setupToolbar();
+
+        if (savedInstanceState == null) {
+            pendingIntroAnimation = true;
+        }
     }
 
     private void setupToolbar() {
         setSupportActionBar(toolbar);
-        toolbar.setTitle("");
         toolbar.setNavigationIcon(R.mipmap.ic_menu_white);
     }
 
@@ -35,14 +46,15 @@ public class MainActivity extends ActionBarActivity {
 
         inboxMenuItem = menu.findItem(R.id.action_mood);
         inboxMenuItem.setActionView(R.layout.item_menu_right);
+        if (pendingIntroAnimation) {
+            pendingIntroAnimation = false;
+            startIntroAnimation();
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -52,4 +64,27 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private void startIntroAnimation() {
+
+        int actionbarSize = Utils.dpToPx(56);
+        toolbar.setTranslationY(-actionbarSize);
+        toolbar.setTranslationY(-actionbarSize);
+        inboxMenuItem.getActionView().setTranslationY(-actionbarSize);
+
+        toolbar.animate()
+                .translationY(0)
+                .setDuration(ANIM_DURATION_TOOLBAR)
+                .setStartDelay(300);
+        toolbar.animate()
+                .translationY(0)
+                .setDuration(ANIM_DURATION_TOOLBAR)
+                .setStartDelay(400);
+        inboxMenuItem.getActionView().animate()
+                .translationY(0)
+                .setDuration(ANIM_DURATION_TOOLBAR)
+                .setStartDelay(500).start();
+    }
+
+
 }
